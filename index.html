@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Depo Hindsight — AI-Powered Deposition Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy: #0a1628;
+  --navy-light: #131f36;
+  --navy-mid: #1a2a45;
+  --blue: #3b82f6;
+  --blue-glow: rgba(59, 130, 246, 0.15);
+  --gold: #f59e0b;
+  --gold-soft: rgba(245, 158, 11, 0.12);
+  --white: #f8fafc;
+  --gray: #94a3b8;
+  --gray-light: #cbd5e1;
+  --red: #ef4444;
+  --green: #10b981;
+  --teal: #14b8a6;
+  --purple: #8b5cf6;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(10, 22, 40, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+  padding: 1rem 0;
+}
+nav .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.nav-logo span { color: var(--blue); }
+nav a {
+  color: var(--gray);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+nav a:hover { color: var(--white); }
+.nav-links { display: flex; gap: 2rem; align-items: center; }
+.nav-cta {
+  background: var(--blue);
+  color: var(--white) !important;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+.nav-cta:hover { opacity: 0.9; }
+
+/* HERO */
+.hero {
+  padding: 10rem 0 6rem;
+  text-align: center;
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--blue-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-block;
+  background: var(--gold-soft);
+  color: var(--gold);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--blue);
+}
+.hero p {
+  font-size: 1.2rem;
+  color: var(--gray);
+  max-width: 640px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+.hero-cta {
+  display: inline-block;
+  background: var(--blue);
+  color: var(--white);
+  padding: 0.85rem 2.5rem;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.hero-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3);
+}
+
+/* PROBLEM SECTION */
+.problem {
+  padding: 5rem 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.problem h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+.problem > .container > p {
+  color: var(--gray);
+  font-size: 1.05rem;
+  max-width: 700px;
+  margin-bottom: 3rem;
+}
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.problem-card {
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 2rem;
+}
+.problem-card .icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+.problem-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.problem-card p {
+  color: var(--gray);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* FEATURES SECTION */
+.features {
+  padding: 5rem 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.features h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+.features > .container > p {
+  color: var(--gray);
+  font-size: 1.05rem;
+  max-width: 700px;
+  margin-bottom: 3rem;
+}
+.feature-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.feature-card {
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: border-color 0.3s, transform 0.2s;
+}
+.feature-card:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  transform: translateY(-2px);
+}
+.feature-card .tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+.feature-card h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.feature-card p {
+  color: var(--gray);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+.feature-card .example {
+  margin-top: 1rem;
+  background: var(--navy);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  font-size: 0.82rem;
+  color: var(--gray-light);
+  line-height: 1.6;
+}
+.example-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gray);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+.example .highlight {
+  color: var(--gold);
+  font-weight: 500;
+}
+.example .cite {
+  color: var(--blue);
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+/* HOW IT WORKS */
+.how-it-works {
+  padding: 5rem 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.how-it-works h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  position: relative;
+}
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: linear-gradient(to right, var(--blue), rgba(59,130,246,0.2));
+}
+.step {
+  text-align: center;
+  position: relative;
+}
+.step-num {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--navy-light);
+  border: 2px solid var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--blue);
+  margin: 0 auto 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+.step h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.step p {
+  color: var(--gray);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* SAMPLE REPORT */
+.sample-report {
+  padding: 5rem 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.sample-report h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+.sample-report > .container > p {
+  color: var(--gray);
+  font-size: 1.05rem;
+  max-width: 700px;
+  margin-bottom: 3rem;
+}
+.report-mock {
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.report-header {
+  background: var(--navy-mid);
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.report-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.report-title {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin-left: 0.5rem;
+}
+.report-body {
+  padding: 2rem;
+}
+.report-section {
+  margin-bottom: 2rem;
+}
+.report-section:last-child { margin-bottom: 0; }
+.report-section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--blue);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+}
+.report-finding {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+.report-finding .num {
+  color: var(--blue);
+  font-weight: 700;
+  min-width: 20px;
+}
+.report-finding .text { color: var(--gray-light); }
+.report-finding .cite {
+  color: var(--blue);
+  font-weight: 600;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.report-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+}
+.badge-high { background: rgba(239,68,68,0.15); color: var(--red); }
+.badge-med { background: rgba(245,158,11,0.15); color: var(--gold); }
+.badge-pattern { background: rgba(139,92,246,0.15); color: var(--purple); }
+
+/* CTA */
+.cta-section {
+  padding: 6rem 0;
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  position: relative;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 400px;
+  background: radial-gradient(circle, var(--blue-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-section h2 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+.cta-section p {
+  color: var(--gray);
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cta-section a {
+  display: inline-block;
+  background: var(--blue);
+  color: var(--white);
+  padding: 0.85rem 2.5rem;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.cta-section a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3);
+}
+
+/* FOOTER */
+footer {
+  padding: 3rem 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  text-align: center;
+  color: var(--gray);
+  font-size: 0.85rem;
+}
+footer a {
+  color: var(--gray);
+  text-decoration: none;
+}
+footer a:hover { color: var(--white); }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .hero { padding: 8rem 0 4rem; }
+  .hero h1 { font-size: 2.2rem; }
+  .steps { grid-template-columns: 1fr; gap: 2.5rem; }
+  .steps::before { display: none; }
+  .nav-links { gap: 1rem; }
+  .feature-list { grid-template-columns: 1fr; }
+  .problem-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <div class="nav-logo">Depo <span>Hindsight</span></div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#sample">Sample</a>
+      <a href="#contact" class="nav-cta">Get in touch</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">AI-Powered Deposition Analysis</div>
+    <h1>Your depositions have<br>untapped <em>opportunities</em></h1>
+    <p>Depo Hindsight is an AI second chair that reviews your entire transcript and delivers a detailed strategy report — catching contradictions, missed follow-ups, and trial ammunition in minutes, not hours.</p>
+    <a href="#contact" class="hero-cta">Schedule a demo</a>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="container">
+    <h2>The problem with every deposition</h2>
+    <p>Attorneys walk out of depositions having captured testimony, but without the time to fully mine what they got.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="icon" style="background: rgba(239,68,68,0.1); color: var(--red);">&#x2715;</div>
+        <h3>Contradictions buried in 300+ pages</h3>
+        <p>A witness says one thing on page 47 and the opposite on page 218. Nobody catches it until trial prep — if they catch it at all.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon" style="background: rgba(245,158,11,0.1); color: var(--gold);">&#x26A0;</div>
+        <h3>Missed follow-ups you will not get back</h3>
+        <p>The witness opened a door. The attorney moved on. That moment is gone — unless someone reviews the transcript line by line.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon" style="background: rgba(59,130,246,0.1); color: var(--blue);">&#x23F1;</div>
+        <h3>Trial prep takes weeks, not days</h3>
+        <p>A seasoned litigator needs hours to fully analyze a single deposition. Multiply that across every witness in the case.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="container">
+    <h2>What Depo Hindsight delivers</h2>
+    <p>A comprehensive strategy report covering every angle — with exact page:line citations back to the transcript.</p>
+
+    <div class="feature-list">
+
+      <div class="feature-card">
+        <div class="tag" style="background: rgba(239,68,68,0.12); color: var(--red);">Critical</div>
+        <h3>Contradictions</h3>
+        <p>Scans the entire transcript for statements that conflict with each other — even hundreds of pages apart. Each contradiction includes exact testimony and how to use it at trial.</p>
+        <div class="example">
+          <div class="example-label">Example finding</div>
+          <span class="highlight">Page 47:</span> "I never spoke to the contractor before the inspection."<br>
+          <span class="highlight">Page 218:</span> "After my phone call with the contractor, I decided to..."<br>
+          <span class="cite">[47:14] vs [218:6]</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="tag" style="background: rgba(139,92,246,0.12); color: var(--purple);">Behavioral</div>
+        <h3>Evasion patterns</h3>
+        <p>Flags every non-answer, redirect, and memory claim the attorney accepted and moved on from. Includes follow-up questions that would pin the witness down.</p>
+        <div class="example">
+          <div class="example-label">Example finding</div>
+          <span class="highlight">Q:</span> "How long were you at the site?"<br>
+          <span class="highlight">A:</span> "I was there for what I felt was an appropriate amount of time."<br>
+          <em style="color: var(--gold); font-size: 0.8rem;">Pin-down:</em> <span style="font-size: 0.8rem;">"Was it one hour or four hours?"</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="tag" style="background: rgba(16,185,129,0.12); color: var(--green);">Strategic</div>
+        <h3>Commitment map</h3>
+        <p>Identifies every firm position the witness locked themselves into — and exactly how each commitment could be used against them at trial.</p>
+        <div class="example">
+          <div class="example-label">Example finding</div>
+          <span class="highlight">Locked in:</span> "There is absolutely no other possible cause."<br>
+          <em style="color: var(--gold); font-size: 0.8rem;">Vulnerability:</em> <span style="font-size: 0.8rem;">Contradicted by the alternative analysis in Exhibit D</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="tag" style="background: rgba(59,130,246,0.12); color: var(--blue);">Technique</div>
+        <h3>Questioning technique review</h3>
+        <p>Identifies compound questions, leading questions at the wrong time, and questions that let the witness escape. Provides stronger rewrites for each one.</p>
+        <div class="example">
+          <div class="example-label">Example finding</div>
+          <span class="highlight">Original:</span> "Did you review the documents and photos before writing your report?"<br>
+          <em style="color: var(--gold); font-size: 0.8rem;">Issue:</em> <span style="font-size: 0.8rem;">Compound — witness answered about documents only, dodged photos</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="tag" style="background: rgba(245,158,11,0.12); color: var(--gold);">Opportunity</div>
+        <h3>Missed follow-ups</h3>
+        <p>Doors that were opened but never walked through — volunteered information that was not pursued, partial admissions that were not expanded.</p>
+        <div class="example">
+          <div class="example-label">Example finding</div>
+          <span class="highlight">Witness volunteered:</span> "Well, other than that one time..."<br>
+          <em style="color: var(--gold); font-size: 0.8rem;">Never asked:</em> <span style="font-size: 0.8rem;">What was the "one time"? When? Who else was involved?</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="tag" style="background: rgba(20,184,166,0.12); color: var(--teal);">Trial prep</div>
+        <h3>Cross-examination ammunition</h3>
+        <p>Testimony ready to use at trial. Each item includes the exact quote, how to deploy it during cross, and setup questions to lay the foundation.</p>
+        <div class="example">
+          <div class="example-label">Example finding</div>
+          <span class="highlight">Testimony:</span> "I only relied on my visual inspection."<br>
+          <em style="color: var(--gold); font-size: 0.8rem;">At trial:</em> <span style="font-size: 0.8rem;">Establish industry standards require testing, then impeach with this admission</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top: 1.5rem;">
+      <div class="feature-list">
+        <div class="feature-card">
+          <div class="tag" style="background: rgba(139,92,246,0.12); color: var(--purple);">Assessment</div>
+          <h3>Credibility assessment</h3>
+          <p>Behavioral pattern analysis across the entire deposition — evasive, defensive, inconsistent, vague, or cooperative. Each observation is cited and categorized.</p>
+        </div>
+        <div class="feature-card">
+          <div class="tag" style="background: rgba(245,158,11,0.12); color: var(--gold);">Coverage</div>
+          <h3>Topic gaps</h3>
+          <p>Areas that should have been explored based on the testimony but were never asked about. Includes suggested questions for a follow-up deposition or trial.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works" id="how-it-works">
+  <div class="container">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Upload transcript</h3>
+        <p>Drop in the deposition transcript. Any standard format works.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>AI analysis</h3>
+        <p>Our AI reviews every line — finding contradictions, patterns, and opportunities a manual review would miss.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Strategy report</h3>
+        <p>Download a polished Word document with every finding cited to the exact page and line.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAMPLE REPORT -->
+<section class="sample-report" id="sample">
+  <div class="container">
+    <h2>What the report looks like</h2>
+    <p>Every finding is specific, actionable, and cited. No generic summaries — only insights you can use.</p>
+
+    <div class="report-mock">
+      <div class="report-header">
+        <div class="report-dot" style="background: var(--red);"></div>
+        <div class="report-dot" style="background: var(--gold);"></div>
+        <div class="report-dot" style="background: var(--green);"></div>
+        <span class="report-title">Johnson_depo_hindsight.docx</span>
+      </div>
+      <div class="report-body">
+
+        <div class="report-section">
+          <div class="report-section-title">Critical findings</div>
+          <div class="report-finding">
+            <span class="num">1.</span>
+            <span class="text">Witness contradicts their own timeline — claims no site visit before March, but references "my February walkthrough" on page 184. <span class="cite">[42:8] [184:22]</span></span>
+          </div>
+          <div class="report-finding">
+            <span class="num">2.</span>
+            <span class="text">Expert admitted relying solely on visual inspection despite industry standards requiring moisture testing. <span class="cite">[67:14]</span></span>
+          </div>
+          <div class="report-finding">
+            <span class="num">3.</span>
+            <span class="text">No documentation of methodology — witness could not identify any notes, photos, or measurements from inspection. <span class="cite">[91:3]</span></span>
+          </div>
+        </div>
+
+        <div class="report-section">
+          <div class="report-section-title">Credibility assessment</div>
+          <div class="report-finding">
+            <span class="text">
+              <span class="report-badge badge-pattern">Evasive</span>
+              Used "I don't recall" 14 times when asked about specific dates and communications. <span class="cite">[23:7]</span>
+            </span>
+          </div>
+          <div class="report-finding">
+            <span class="text">
+              <span class="report-badge badge-pattern">Inconsistent</span>
+              Described inspection as "thorough" but later admitted spending less than 45 minutes on site. <span class="cite">[55:19]</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="report-section">
+          <div class="report-section-title">Contradictions</div>
+          <div class="report-finding">
+            <span class="text">
+              <span class="report-badge badge-high">High</span>
+              <span class="highlight" style="color: var(--gold);">Page 47:</span> "I never communicated with opposing counsel."<br>
+              <span class="highlight" style="color: var(--gold); margin-left: 68px; display: inline-block;">Page 203:</span> "After my email exchange with Mr. Davis..." <span class="cite">[47:14] [203:6]</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="report-section">
+          <div class="report-section-title">Cross-examination ammunition</div>
+          <div class="report-finding">
+            <span class="text">
+              <span class="report-badge badge-high">High</span>
+              Witness testified fee arrangement is "standard hourly" but engagement letter shows contingency structure. Setup: confirm the testimony, then introduce Exhibit C. <span class="cite">[112:20]</span>
+            </span>
+          </div>
+        </div>
+
+        <div style="text-align: center; padding: 1rem 0 0.5rem; color: var(--gray); font-size: 0.85rem; font-style: italic;">
+          ... plus evasion patterns, commitment map, questioning review, missed follow-ups, and topic gaps
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="container">
+    <h2>See what your depositions are missing</h2>
+    <p>Get a Depo Hindsight report on your next transcript. Contact us to get started.</p>
+    <a href="https://depohindsight.com">Contact us</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p>&copy; 2026 Depo Hindsight. All rights reserved.</p>
+    <p style="margin-top: 0.5rem;"><a href="https://depohindsight.com">depohindsight.com</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
