@@ -80,6 +80,7 @@ nav a:hover { color: var(--white); }
   transition: opacity 0.2s;
 }
 .nav-cta:hover { opacity: 0.9; }
+.hamburger { display: none; }
 
 /* HERO */
 .hero {
@@ -484,14 +485,89 @@ footer a {
 footer a:hover { color: var(--white); }
 
 /* RESPONSIVE */
-@media (max-width: 768px) {
-  .hero { padding: 8rem 0 4rem; }
-  .hero h1 { font-size: 2.2rem; }
+/* TABLET */
+@media (max-width: 900px) {
+  .container { padding: 0 1.5rem; }
+  .feature-list { grid-template-columns: 1fr 1fr; }
+  .problem-grid { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr; gap: 2.5rem; }
   .steps::before { display: none; }
-  .nav-links { gap: 1rem; }
-  .feature-list { grid-template-columns: 1fr; }
-  .problem-grid { grid-template-columns: 1fr; }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .container { padding: 0 1.25rem; }
+
+  /* Nav - hamburger */
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(10, 22, 40, 0.98);
+    flex-direction: column;
+    padding: 1.5rem 2rem;
+    gap: 1.25rem;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+  }
+  .nav-links.open { display: flex; }
+  .nav-cta { text-align: center; }
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px;
+  }
+  .hamburger span {
+    width: 24px;
+    height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Hero */
+  .hero { padding: 7rem 0 3rem; }
+  .hero h1 { font-size: 1.9rem; line-height: 1.15; }
+  .hero h1 br { display: none; }
+  .hero p { font-size: 1rem; margin-bottom: 2rem; }
+  .hero-badge { font-size: 0.7rem; padding: 0.35rem 0.85rem; }
+  .hero-cta { padding: 0.75rem 2rem; font-size: 1rem; width: 100%; text-align: center; }
+
+  /* Problem */
+  .problem { padding: 3rem 0; }
+  .problem h2, .features h2, .how-it-works h2, .sample-report h2, .cta-section h2 { font-size: 1.5rem; }
+  .problem-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .problem-card { padding: 1.5rem; }
+
+  /* Features */
+  .features { padding: 3rem 0; }
+  .feature-list { grid-template-columns: 1fr; gap: 1rem; }
+  .feature-card { padding: 1.5rem; }
+  .feature-card .example { font-size: 0.78rem; padding: 0.85rem 1rem; }
+
+  /* How it works */
+  .how-it-works { padding: 3rem 0; }
+  .steps { grid-template-columns: 1fr; gap: 2rem; }
+  .steps::before { display: none; }
+  .step-num { width: 64px; height: 64px; font-size: 1.4rem; }
+
+  /* Sample report */
+  .sample-report { padding: 3rem 0; }
+  .report-body { padding: 1.25rem; }
+  .report-finding { font-size: 0.82rem; }
+  .report-header { padding: 1rem 1.25rem; }
+
+  /* CTA */
+  .cta-section { padding: 4rem 0; }
+  .cta-section h2 { font-size: 1.6rem; }
+  .cta-section p { font-size: 1rem; }
+  .cta-section a { width: 100%; text-align: center; padding: 0.85rem 2rem; }
 }
 </style>
 </head>
@@ -501,11 +577,14 @@ footer a:hover { color: var(--white); }
 <nav>
   <div class="container">
     <div class="nav-logo">Depo <span>Hindsight</span></div>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
       <a href="#features">Features</a>
       <a href="#how-it-works">How it works</a>
       <a href="#sample">Sample</a>
       <a href="#contact" class="nav-cta">Get in touch</a>
+    </div>
+    <div class="hamburger" id="hamburger" onclick="this.classList.toggle('open');document.getElementById('navLinks').classList.toggle('open');">
+      <span></span><span></span><span></span>
     </div>
   </div>
 </nav>
@@ -757,5 +836,13 @@ footer a:hover { color: var(--white); }
   </div>
 </footer>
 
+<script>
+document.querySelectorAll('#navLinks a').forEach(function(a){
+  a.addEventListener('click',function(){
+    document.getElementById('navLinks').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  });
+});
+</script>
 </body>
 </html>
