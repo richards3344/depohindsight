@@ -46,18 +46,27 @@
     <!-- TABS -->
     <div class="feature-tabs">
       <button class="feature-tab active" data-tab="summary" onclick="switchTab('summary')">
-        <span class="tab-icon" style="color: var(--blue);">&#9632;</span> Summary Report <span class="tab-price">$39</span>
+        <div class="tab-label">Summary Report</div>
+        <div class="tab-desc">Know what happened — fast</div>
+        <div class="tab-price-big">$39</div>
       </button>
       <button class="feature-tab" data-tab="hindsight" onclick="switchTab('hindsight')">
-        <span class="tab-icon" style="color: var(--gold);">&#9632;</span> Hindsight Report <span class="tab-price">$49</span>
+        <div class="tab-label">Hindsight Report</div>
+        <div class="tab-desc">See what you missed</div>
+        <div class="tab-price-big">$49</div>
+      </button>
+      <button class="feature-tab" data-tab="both" onclick="switchTab('both')">
+        <div class="tab-label">Both Reports</div>
+        <div class="tab-desc">Complete coverage</div>
+        <div class="tab-price-big">$75 <span class="tab-save">Save $13</span></div>
       </button>
     </div>
 
     <!-- SUMMARY TAB -->
-    <div class="tab-content active" id="tab-summary">
-      <div class="tab-intro">
-        <h3>Know what happened — fast</h3>
-        <p>A structured breakdown of the entire deposition so you can get up to speed in minutes instead of hours.</p>
+    <div class="tab-panel active" id="tab-summary">
+      <div class="tab-panel-header" style="border-left-color: var(--blue);">
+        <h3>A structured breakdown of the entire deposition</h3>
+        <p>Get up to speed on a 300-page transcript in minutes. Every section summarized, every key admission pulled out, every citation tracked.</p>
       </div>
 
       <div class="feature-list">
@@ -113,13 +122,17 @@
           <p>Professional .docx with bookmarks, internal hyperlinks, headers, and page:line citations throughout. Ready to share with your team or drop into a trial binder.</p>
         </div>
       </div>
+
+      <div style="text-align: center; margin-top: 2rem;">
+        <a href="{{ url_for('register') }}" class="btn">Try Summary free</a>
+      </div>
     </div>
 
     <!-- HINDSIGHT TAB -->
-    <div class="tab-content" id="tab-hindsight">
-      <div class="tab-intro">
-        <h3>See what you missed — and what to do about it</h3>
-        <p>A strategic analysis that finds contradictions, evasions, and trial ammunition buried in the transcript.</p>
+    <div class="tab-panel" id="tab-hindsight">
+      <div class="tab-panel-header" style="border-left-color: var(--gold);">
+        <h3>A strategic analysis that finds what humans miss</h3>
+        <p>Contradictions buried 200 pages apart. Evasions the attorney accepted. Doors opened but never walked through. All surfaced with exact citations and trial-ready strategy.</p>
       </div>
 
       <div class="feature-list">
@@ -206,6 +219,72 @@
           </div>
         </div>
       </div>
+
+      <div style="text-align: center; margin-top: 2rem;">
+        <a href="{{ url_for('register') }}" class="btn">Try Hindsight free</a>
+      </div>
+    </div>
+
+    <!-- BOTH TAB -->
+    <div class="tab-panel" id="tab-both">
+      <div class="tab-panel-header" style="border-left-color: var(--green);">
+        <h3>Complete deposition coverage — two reports, one upload</h3>
+        <p>Get the full picture: understand what happened with the Summary, then discover what to do about it with Hindsight.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div style="background: var(--navy-light); border: 1px solid rgba(59,130,246,0.2); border-radius: 14px; padding: 2rem;">
+          <div style="color: var(--blue); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-bottom: 1rem;">Summary report includes</div>
+          <ul style="list-style: none;">
+            <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Deposition abstract
+            </li>
+            <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Key admissions table
+            </li>
+            <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Section-by-section breakdown
+            </li>
+            <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Witness qualifications
+            </li>
+            <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Exhibit references
+            </li>
+            <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.5rem 0;">
+              <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Formatted .docx
+            </li>
+          </ul>
+        </div>
+        <div style="background: var(--navy-light); border: 1px solid rgba(245,158,11,0.2); border-radius: 14px; padding: 2rem;">
+          <div style="color: var(--gold); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-bottom: 1rem;">Hindsight report includes</div>
+          <ul style="list-style: none;">
+            <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Contradictions analysis
+            </li>
+            <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Evasion patterns
+            </li>
+            <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Commitment map
+            </li>
+            <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Missed follow-ups
+            </li>
+            <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Cross-exam ammunition
+            </li>
+            <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.5rem 0;">
+              <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Credibility assessment
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 2.5rem;">
+        <a href="{{ url_for('register') }}" class="btn" style="padding: 1rem 3rem; font-size: 1.1rem;">Get both free — start now</a>
+        <p style="color: var(--gray); font-size: 0.85rem; margin-top: 0.75rem;">Your first deposition analysis is on us. Upload a transcript and get both reports.</p>
+      </div>
     </div>
 
   </div>
@@ -214,7 +293,7 @@
 <script>
 function switchTab(tab) {
   document.querySelectorAll('.feature-tab').forEach(function(t) { t.classList.remove('active'); });
-  document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(function(c) { c.classList.remove('active'); });
   document.querySelector('[data-tab="' + tab + '"]').classList.add('active');
   document.getElementById('tab-' + tab).classList.add('active');
 }
