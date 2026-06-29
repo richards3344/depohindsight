@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Processing — Depo Hindsight{% endblock %}
+
+{% block content %}
+<div class="processing-page">
+  <div class="processing-card">
+    <h1>Analyzing transcript</h1>
+    <p class="subtitle">{{ job.filename }}</p>
+
+    <div class="progress-pct" id="progressPct">0%</div>
+
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progressBar"></div>
+    </div>
+
+    <p class="progress-text" id="progressText">Starting analysis...</p>
+
+    <div class="download-section" id="downloadSection">
+      <p style="color: var(--green); font-weight: 600; margin-bottom: 1rem;">Analysis complete!</p>
+      <div id="downloadLinks"></div>
+      <div style="margin-top: 1.5rem;">
+        <a href="{{ url_for('dashboard') }}" class="btn" style="background: var(--navy-mid); width: auto;">Back to dashboard</a>
+      </div>
+    </div>
+
+    <div id="errorSection" style="display: none; margin-top: 1.5rem;">
+      <p style="color: var(--red); font-weight: 600; margin-bottom: 1rem;">Analysis failed</p>
+      <p class="progress-text" id="errorText"></p>
+      <a href="{{ url_for('dashboard') }}" class="btn" style="background: var(--navy-mid); margin-top: 1rem;">Back to dashboard</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+  var jobId = "{{ job.id }}";
+  var bar = document.getElementById('progressBar');
+  var pct = document.getElementById('progressPct');
+  var text = document.getElementById('progressText');
+  var dlSection = document.getElementById('downloadSection');
+  var dlLinks = document.getElementById('downloadLinks');
+  var errSection = document.getElementById('errorSection');
+  var errText = document.getElementById('errorText');
+
+  var source = new EventSource('/stream/' + jobId);
+
+  source.onmessage = function(e) {
+    var data = JSON.parse(e.data);
+
+    if (data.progress !== undefined) {
+      bar.style.width = data.progress + '%';
+      pct.textContent = data.progress + '%';
+    }
+    if (data.text) {
+      text.textContent = data.text;
+    }
+
+    if (data.status === 'complete') {
+      source.close();
+      bar.style.width = '100%';
+      pct.textContent = '100%';
+      text.style.display = 'none';
+
+      if (data.documents) {
+        for (var i = 0; i < data.documents.length; i++) {
+          var doc = data.documents[i];
+          var a = document.createElement('a');
+          a.href = '/download/' + doc.id;
+          a.className = 'btn';
+          a.style.width = 'auto';
+          a.style.display = 'inline-block';
+          a.style.margin = '0.25rem';
+          a.textContent = 'Download ' + doc.type;
+          dlLinks.appendChild(a);
+        }
+      }
+      dlSection.style.display = 'block';
+    }
+
+    if (data.status === 'failed') {
+      source.close();
+      text.style.display = 'none';
+      pct.style.display = 'none';
+      errText.textContent = data.error || 'Something went wrong. Please try again.';
+      errSection.style.display = 'block';
+    }
+  };
+
+  source.onerror = function() {
+    source.close();
+    text.textContent = 'Connection lost. Check dashboard for results.';
+  };
+})();
+</script>
+{% endblock %}

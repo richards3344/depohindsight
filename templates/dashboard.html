@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Depo Hindsight{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+  <div class="container">
+    <h1>Dashboard</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <div class="upload-card">
+      <h2>New analysis</h2>
+      <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="form-group">
+          <label for="transcript">Upload transcript (.txt file)</label>
+          <input type="file" id="transcript" name="transcript" accept=".txt" required>
+        </div>
+        <div class="form-group">
+          <label>Report type</label>
+          <div class="radio-group">
+            <label><input type="radio" name="job_type" value="summary"> Summary</label>
+            <label><input type="radio" name="job_type" value="hindsight"> Hindsight</label>
+            <label><input type="radio" name="job_type" value="both" checked> Both</label>
+          </div>
+        </div>
+        <button type="submit" class="btn">Generate reports</button>
+      </form>
+    </div>
+
+    <div class="history-section">
+      <h2>Past analyses</h2>
+      {% if jobs %}
+        <table class="job-table">
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Deponent</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for job in jobs %}
+            <tr>
+              <td>{{ job.filename }}</td>
+              <td>{{ job.deponent or '—' }}</td>
+              <td>{{ job.job_type }}</td>
+              <td>
+                {% if job.status == 'complete' %}
+                  <span class="status-badge status-complete">Complete</span>
+                {% elif job.status == 'failed' %}
+                  <span class="status-badge status-failed">Failed</span>
+                {% else %}
+                  <span class="status-badge status-processing">Processing</span>
+                {% endif %}
+              </td>
+              <td>{{ job.created_at.strftime('%b %d, %Y') }}</td>
+              <td>
+                {% if job.status == 'complete' %}
+                  {% for doc in job.documents %}
+                    <a href="{{ url_for('download', doc_id=doc.id) }}" class="download-link">{{ doc.doc_type }}.docx</a>
+                    {% if not loop.last %}<br>{% endif %}
+                  {% endfor %}
+                {% elif job.status == 'processing' %}
+                  <a href="{{ url_for('processing', job_id=job.id) }}" class="download-link">View progress</a>
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="no-jobs">No analyses yet. Upload a transcript above to get started.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
