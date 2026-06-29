@@ -40,97 +40,185 @@
 <!-- FEATURES -->
 <section class="features" id="features">
   <div class="container">
-    <h2>What Depo Hindsight delivers</h2>
-    <p>A comprehensive strategy report covering every angle — with exact page:line citations back to the transcript.</p>
+    <h2>Two reports. Every angle covered.</h2>
+    <p>Each report is a downloadable Word document with exact page:line citations back to the transcript.</p>
 
-    <div class="feature-list">
-
-      <div class="feature-card">
-        <div class="tag" style="background: rgba(239,68,68,0.12); color: var(--red);">Critical</div>
-        <h3>Contradictions</h3>
-        <p>Scans the entire transcript for statements that conflict with each other — even hundreds of pages apart. Each contradiction includes exact testimony and how to use it at trial.</p>
-        <div class="example">
-          <div class="example-label">Example finding</div>
-          <span class="highlight">Page 47:</span> "I never spoke to the contractor before the inspection."<br>
-          <span class="highlight">Page 218:</span> "After my phone call with the contractor, I decided to..."<br>
-          <span class="cite">[47:14] vs [218:6]</span>
-        </div>
-      </div>
-
-      <div class="feature-card">
-        <div class="tag" style="background: rgba(139,92,246,0.12); color: var(--purple);">Behavioral</div>
-        <h3>Evasion patterns</h3>
-        <p>Flags every non-answer, redirect, and memory claim the attorney accepted and moved on from. Includes follow-up questions that would pin the witness down.</p>
-        <div class="example">
-          <div class="example-label">Example finding</div>
-          <span class="highlight">Q:</span> "How long were you at the site?"<br>
-          <span class="highlight">A:</span> "I was there for what I felt was an appropriate amount of time."<br>
-          <em style="color: var(--gold); font-size: 0.8rem;">Pin-down:</em> <span style="font-size: 0.8rem;">"Was it one hour or four hours?"</span>
-        </div>
-      </div>
-
-      <div class="feature-card">
-        <div class="tag" style="background: rgba(16,185,129,0.12); color: var(--green);">Strategic</div>
-        <h3>Commitment map</h3>
-        <p>Identifies every firm position the witness locked themselves into — and exactly how each commitment could be used against them at trial.</p>
-        <div class="example">
-          <div class="example-label">Example finding</div>
-          <span class="highlight">Locked in:</span> "There is absolutely no other possible cause."<br>
-          <em style="color: var(--gold); font-size: 0.8rem;">Vulnerability:</em> <span style="font-size: 0.8rem;">Contradicted by the alternative analysis in Exhibit D</span>
-        </div>
-      </div>
-
-      <div class="feature-card">
-        <div class="tag" style="background: rgba(59,130,246,0.12); color: var(--blue);">Technique</div>
-        <h3>Questioning technique review</h3>
-        <p>Identifies compound questions, leading questions at the wrong time, and questions that let the witness escape. Provides stronger rewrites for each one.</p>
-        <div class="example">
-          <div class="example-label">Example finding</div>
-          <span class="highlight">Original:</span> "Did you review the documents and photos before writing your report?"<br>
-          <em style="color: var(--gold); font-size: 0.8rem;">Issue:</em> <span style="font-size: 0.8rem;">Compound — witness answered about documents only, dodged photos</span>
-        </div>
-      </div>
-
-      <div class="feature-card">
-        <div class="tag" style="background: rgba(245,158,11,0.12); color: var(--gold);">Opportunity</div>
-        <h3>Missed follow-ups</h3>
-        <p>Doors that were opened but never walked through — volunteered information that was not pursued, partial admissions that were not expanded.</p>
-        <div class="example">
-          <div class="example-label">Example finding</div>
-          <span class="highlight">Witness volunteered:</span> "Well, other than that one time..."<br>
-          <em style="color: var(--gold); font-size: 0.8rem;">Never asked:</em> <span style="font-size: 0.8rem;">What was the "one time"? When? Who else was involved?</span>
-        </div>
-      </div>
-
-      <div class="feature-card">
-        <div class="tag" style="background: rgba(20,184,166,0.12); color: var(--teal);">Trial prep</div>
-        <h3>Cross-examination ammunition</h3>
-        <p>Testimony ready to use at trial. Each item includes the exact quote, how to deploy it during cross, and setup questions to lay the foundation.</p>
-        <div class="example">
-          <div class="example-label">Example finding</div>
-          <span class="highlight">Testimony:</span> "I only relied on my visual inspection."<br>
-          <em style="color: var(--gold); font-size: 0.8rem;">At trial:</em> <span style="font-size: 0.8rem;">Establish industry standards require testing, then impeach with this admission</span>
-        </div>
-      </div>
-
+    <!-- TABS -->
+    <div class="feature-tabs">
+      <button class="feature-tab active" data-tab="summary" onclick="switchTab('summary')">
+        <span class="tab-icon" style="color: var(--blue);">&#9632;</span> Summary Report <span class="tab-price">$39</span>
+      </button>
+      <button class="feature-tab" data-tab="hindsight" onclick="switchTab('hindsight')">
+        <span class="tab-icon" style="color: var(--gold);">&#9632;</span> Hindsight Report <span class="tab-price">$49</span>
+      </button>
     </div>
 
-    <div style="margin-top: 1.5rem;">
+    <!-- SUMMARY TAB -->
+    <div class="tab-content active" id="tab-summary">
+      <div class="tab-intro">
+        <h3>Know what happened — fast</h3>
+        <p>A structured breakdown of the entire deposition so you can get up to speed in minutes instead of hours.</p>
+      </div>
+
       <div class="feature-list">
         <div class="feature-card">
-          <div class="tag" style="background: rgba(139,92,246,0.12); color: var(--purple);">Assessment</div>
-          <h3>Credibility assessment</h3>
-          <p>Behavioral pattern analysis across the entire deposition — evasive, defensive, inconsistent, vague, or cooperative. Each observation is cited and categorized.</p>
+          <div class="tag" style="background: rgba(59,130,246,0.12); color: var(--blue);">Overview</div>
+          <h3>Deposition abstract</h3>
+          <p>A comprehensive narrative summary of the entire deposition — who the witness is, what was covered, and the key takeaways. Read this instead of 300 pages.</p>
+          <div class="example">
+            <div class="example-label">Example excerpt</div>
+            <span class="highlight">Deponent:</span> Dr. Michael Torres, structural engineer retained by defendant<br>
+            <span style="font-size: 0.85rem; color: var(--gray-light);">Dr. Torres testified regarding his November 2024 site inspection of the property. He confirmed reliance solely on visual observation, acknowledged no moisture testing was performed, and admitted his report was drafted before reviewing plaintiff's engineering analysis...</span>
+          </div>
         </div>
+
         <div class="feature-card">
-          <div class="tag" style="background: rgba(245,158,11,0.12); color: var(--gold);">Coverage</div>
-          <h3>Topic gaps</h3>
-          <p>Areas that should have been explored based on the testimony but were never asked about. Includes suggested questions for a follow-up deposition or trial.</p>
+          <div class="tag" style="background: rgba(239,68,68,0.12); color: var(--red);">Critical</div>
+          <h3>Key admissions</h3>
+          <p>Every important concession the witness made, pulled into a single table with exact citations. The moments that matter most — collected in one place.</p>
+          <div class="example">
+            <div class="example-label">Example finding</div>
+            <span class="highlight">Admission:</span> "I did not review the plaintiff's report before writing my own."<br>
+            <span class="cite">[91:3-14]</span><br>
+            <em style="color: var(--gold); font-size: 0.8rem;">Significance:</em> <span style="font-size: 0.8rem;">Expert opinion formed without considering opposing analysis</span>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="tag" style="background: rgba(16,185,129,0.12); color: var(--green);">Structure</div>
+          <h3>Section-by-section breakdown</h3>
+          <p>The deposition organized by topic — each section summarized with the key testimony and citations. Jump to any subject without re-reading the transcript.</p>
+          <div class="example">
+            <div class="example-label">Example section</div>
+            <span class="highlight">Section 4:</span> Site inspection methodology<br>
+            <span style="font-size: 0.85rem; color: var(--gray-light);">Witness described a 45-minute walkthrough with no instruments. Admitted the industry standard calls for moisture readings at minimum. Testified he "didn't think it was necessary." </span><span class="cite">[55:8-67:22]</span>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="tag" style="background: rgba(139,92,246,0.12); color: var(--purple);">Reference</div>
+          <h3>Witness background & qualifications</h3>
+          <p>Education, experience, prior testimony history, and any qualifications the witness claimed or was challenged on — all in one section.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="tag" style="background: rgba(245,158,11,0.12); color: var(--gold);">Discovery</div>
+          <h3>Exhibit & document references</h3>
+          <p>Every document, exhibit, and external reference mentioned during testimony — tracked with page:line so you can cross-reference with your case file.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="tag" style="background: rgba(20,184,166,0.12); color: var(--teal);">Ready</div>
+          <h3>Formatted Word document</h3>
+          <p>Professional .docx with bookmarks, internal hyperlinks, headers, and page:line citations throughout. Ready to share with your team or drop into a trial binder.</p>
         </div>
       </div>
     </div>
+
+    <!-- HINDSIGHT TAB -->
+    <div class="tab-content" id="tab-hindsight">
+      <div class="tab-intro">
+        <h3>See what you missed — and what to do about it</h3>
+        <p>A strategic analysis that finds contradictions, evasions, and trial ammunition buried in the transcript.</p>
+      </div>
+
+      <div class="feature-list">
+        <div class="feature-card">
+          <div class="tag" style="background: rgba(239,68,68,0.12); color: var(--red);">Critical</div>
+          <h3>Contradictions</h3>
+          <p>Scans the entire transcript for statements that conflict with each other — even hundreds of pages apart. Each contradiction includes exact testimony and how to use it at trial.</p>
+          <div class="example">
+            <div class="example-label">Example finding</div>
+            <span class="highlight">Page 47:</span> "I never spoke to the contractor before the inspection."<br>
+            <span class="highlight">Page 218:</span> "After my phone call with the contractor, I decided to..."<br>
+            <span class="cite">[47:14] vs [218:6]</span>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="tag" style="background: rgba(139,92,246,0.12); color: var(--purple);">Behavioral</div>
+          <h3>Evasion patterns</h3>
+          <p>Flags every non-answer, redirect, and memory claim the attorney accepted and moved on from. Includes follow-up questions that would pin the witness down.</p>
+          <div class="example">
+            <div class="example-label">Example finding</div>
+            <span class="highlight">Q:</span> "How long were you at the site?"<br>
+            <span class="highlight">A:</span> "I was there for what I felt was an appropriate amount of time."<br>
+            <em style="color: var(--gold); font-size: 0.8rem;">Pin-down:</em> <span style="font-size: 0.8rem;">"Was it one hour or four hours?"</span>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="tag" style="background: rgba(16,185,129,0.12); color: var(--green);">Strategic</div>
+          <h3>Commitment map</h3>
+          <p>Identifies every firm position the witness locked themselves into — and exactly how each commitment could be used against them at trial.</p>
+          <div class="example">
+            <div class="example-label">Example finding</div>
+            <span class="highlight">Locked in:</span> "There is absolutely no other possible cause."<br>
+            <em style="color: var(--gold); font-size: 0.8rem;">Vulnerability:</em> <span style="font-size: 0.8rem;">Contradicted by the alternative analysis in Exhibit D</span>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="tag" style="background: rgba(59,130,246,0.12); color: var(--blue);">Technique</div>
+          <h3>Questioning technique review</h3>
+          <p>Identifies compound questions, leading questions at the wrong time, and questions that let the witness escape. Provides stronger rewrites for each one.</p>
+          <div class="example">
+            <div class="example-label">Example finding</div>
+            <span class="highlight">Original:</span> "Did you review the documents and photos before writing your report?"<br>
+            <em style="color: var(--gold); font-size: 0.8rem;">Issue:</em> <span style="font-size: 0.8rem;">Compound — witness answered about documents only, dodged photos</span>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="tag" style="background: rgba(245,158,11,0.12); color: var(--gold);">Opportunity</div>
+          <h3>Missed follow-ups</h3>
+          <p>Doors that were opened but never walked through — volunteered information that was not pursued, partial admissions that were not expanded.</p>
+          <div class="example">
+            <div class="example-label">Example finding</div>
+            <span class="highlight">Witness volunteered:</span> "Well, other than that one time..."<br>
+            <em style="color: var(--gold); font-size: 0.8rem;">Never asked:</em> <span style="font-size: 0.8rem;">What was the "one time"? When? Who else was involved?</span>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="tag" style="background: rgba(20,184,166,0.12); color: var(--teal);">Trial prep</div>
+          <h3>Cross-examination ammunition</h3>
+          <p>Testimony ready to use at trial. Each item includes the exact quote, how to deploy it during cross, and setup questions to lay the foundation.</p>
+          <div class="example">
+            <div class="example-label">Example finding</div>
+            <span class="highlight">Testimony:</span> "I only relied on my visual inspection."<br>
+            <em style="color: var(--gold); font-size: 0.8rem;">At trial:</em> <span style="font-size: 0.8rem;">Establish industry standards require testing, then impeach with this admission</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem;">
+        <div class="feature-list">
+          <div class="feature-card">
+            <div class="tag" style="background: rgba(139,92,246,0.12); color: var(--purple);">Assessment</div>
+            <h3>Credibility assessment</h3>
+            <p>Behavioral pattern analysis across the entire deposition — evasive, defensive, inconsistent, vague, or cooperative. Each observation is cited and categorized.</p>
+          </div>
+          <div class="feature-card">
+            <div class="tag" style="background: rgba(245,158,11,0.12); color: var(--gold);">Coverage</div>
+            <h3>Topic gaps</h3>
+            <p>Areas that should have been explored based on the testimony but were never asked about. Includes suggested questions for a follow-up deposition or trial.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.feature-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+  document.querySelector('[data-tab="' + tab + '"]').classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+</script>
 
 <!-- HOW IT WORKS -->
 <section class="how-it-works" id="how-it-works">

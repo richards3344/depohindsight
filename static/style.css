@@ -191,6 +191,64 @@ nav a:hover { color: var(--white); }
   padding: 5rem 0;
   border-top: 1px solid rgba(255,255,255,0.05);
 }
+.feature-tabs {
+  display: flex;
+  gap: 0.75rem;
+  margin: 2.5rem 0 2rem;
+}
+.feature-tab {
+  flex: 1;
+  padding: 1.1rem 1.5rem;
+  background: var(--navy-light);
+  border: 2px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  color: var(--gray);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.feature-tab:hover {
+  border-color: rgba(255,255,255,0.15);
+  color: var(--white);
+}
+.feature-tab.active {
+  border-color: var(--blue);
+  color: var(--white);
+  background: rgba(59,130,246,0.08);
+}
+.feature-tab .tab-icon { font-size: 0.6rem; }
+.feature-tab .tab-price {
+  background: rgba(255,255,255,0.08);
+  padding: 0.15rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--gray-light);
+}
+.feature-tab.active .tab-price {
+  background: rgba(59,130,246,0.2);
+  color: var(--blue);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.tab-intro {
+  margin-bottom: 2rem;
+}
+.tab-intro h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+.tab-intro p {
+  color: var(--gray);
+  font-size: 1rem;
+}
 .features h2 {
   font-size: 2rem;
   font-weight: 700;
@@ -816,6 +874,7 @@ footer a:hover { color: var(--white); }
   .cta-section p { font-size: 1rem; }
   .cta-section a { width: 100%; text-align: center; padding: 0.85rem 2rem; }
 
+  .feature-tabs { flex-direction: column; }
   .pricing-grid { grid-template-columns: 1fr !important; }
   .auth-card { padding: 2rem 1.5rem; }
   .upload-card { padding: 2rem 1.5rem; }
