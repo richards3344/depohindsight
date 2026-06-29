@@ -518,6 +518,16 @@ def run_analysis(job_id, transcript_text, job_type):
 
 with app.app_context():
     db.create_all()
+    with db.engine.connect() as conn:
+        from sqlalchemy import text, inspect
+        cols = [c['name'] for c in inspect(db.engine).get_columns('user')]
+        if 'summary_credits' not in cols:
+            conn.execute(text('ALTER TABLE "user" ADD COLUMN summary_credits INTEGER DEFAULT 1'))
+        if 'hindsight_credits' not in cols:
+            conn.execute(text('ALTER TABLE "user" ADD COLUMN hindsight_credits INTEGER DEFAULT 1'))
+        if 'unlimited' not in cols:
+            conn.execute(text('ALTER TABLE "user" ADD COLUMN unlimited BOOLEAN DEFAULT FALSE'))
+        conn.commit()
 
 
 if __name__ == '__main__':
