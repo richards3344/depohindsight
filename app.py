@@ -115,6 +115,11 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/pricing')
+def pricing():
+    return render_template('pricing.html')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:

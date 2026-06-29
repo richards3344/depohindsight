@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Pricing — Depo Hindsight{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding: 8rem 0 3rem;">
+  <div class="container">
+    <div class="hero-badge">Simple pricing</div>
+    <h1>Pay per report. <em>No subscriptions.</em></h1>
+    <p>Every report includes exact page:line citations, trial-ready analysis, and a downloadable Word document.</p>
+  </div>
+</section>
+
+<section style="padding: 0 0 5rem;">
+  <div class="container">
+    <div class="pricing-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+
+      <!-- SUMMARY -->
+      <div style="background: var(--navy-light); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 2.5rem; text-align: center;">
+        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--blue); font-weight: 600; margin-bottom: 1rem;">Summary</div>
+        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.25rem;">$39</div>
+        <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 2rem;">per report</div>
+        <ul style="list-style: none; text-align: left; margin-bottom: 2rem;">
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Comprehensive deposition abstract
+          </li>
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Key admissions table
+          </li>
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Section-by-section breakdown
+          </li>
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Full transcript with citations
+          </li>
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0;">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Downloadable .docx
+          </li>
+        </ul>
+        <a href="{{ url_for('register') }}" class="btn" style="width: 100%;">Get started</a>
+      </div>
+
+      <!-- HINDSIGHT -->
+      <div style="background: var(--navy-light); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 2.5rem; text-align: center;">
+        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold); font-weight: 600; margin-bottom: 1rem;">Hindsight</div>
+        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.25rem;">$49</div>
+        <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 2rem;">per report</div>
+        <ul style="list-style: none; text-align: left; margin-bottom: 2rem;">
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Contradictions analysis
+          </li>
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Evasion patterns
+          </li>
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Commitment map
+          </li>
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Missed follow-ups & topic gaps
+          </li>
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0;">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Cross-examination ammunition
+          </li>
+        </ul>
+        <a href="{{ url_for('register') }}" class="btn" style="width: 100%;">Get started</a>
+      </div>
+
+      <!-- BOTH -->
+      <div style="background: var(--navy-light); border: 2px solid var(--blue); border-radius: 16px; padding: 2.5rem; text-align: center; position: relative;">
+        <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--blue); color: white; font-size: 0.7rem; font-weight: 600; padding: 0.25rem 1rem; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.05em;">Best value</div>
+        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--green); font-weight: 600; margin-bottom: 1rem;">Both reports</div>
+        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.25rem;">$75</div>
+        <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 0.25rem;">per deposition</div>
+        <div style="color: var(--green); font-size: 0.8rem; font-weight: 600; margin-bottom: 2rem;">Save $13</div>
+        <ul style="list-style: none; text-align: left; margin-bottom: 2rem;">
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Everything in Summary
+          </li>
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Everything in Hindsight
+          </li>
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Complete deposition coverage
+          </li>
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Trial prep ready
+          </li>
+          <li style="color: var(--gray-light); font-size: 0.9rem; padding: 0.4rem 0;">
+            <span style="color: var(--green); margin-right: 0.5rem;">&#10003;</span> Two downloadable .docx files
+          </li>
+        </ul>
+        <a href="{{ url_for('register') }}" class="btn" style="width: 100%;">Get started</a>
+      </div>
+
+    </div>
+
+    <div style="text-align: center; margin-top: 3rem; color: var(--gray); font-size: 0.95rem;">
+      <p>Every new account includes <strong style="color: var(--white);">1 free Summary + 1 free Hindsight</strong> so you can try it risk-free.</p>
+      <p style="margin-top: 0.75rem;">Need volume pricing? <a href="mailto:rick@ucrinc.com" style="color: var(--blue); text-decoration: none; font-weight: 500;">Contact us</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}
