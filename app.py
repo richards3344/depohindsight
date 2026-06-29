@@ -206,6 +206,24 @@ def processing(job_id):
     return render_template('processing.html', job=job)
 
 
+@app.route('/status/<job_id>')
+@login_required
+def status(job_id):
+    job = db.session.get(Job, job_id)
+    if not job or job.user_id != current_user.id:
+        return json.dumps({'error': 'not found'}), 404
+    data = {
+        'progress': job.progress,
+        'text': job.progress_text or '',
+        'status': job.status,
+    }
+    if job.status == 'complete':
+        data['documents'] = [{'id': d.id, 'type': d.doc_type} for d in job.documents]
+    if job.status == 'failed':
+        data['error'] = job.error_message or 'Analysis failed'
+    return json.dumps(data), 200, {'Content-Type': 'application/json'}
+
+
 @app.route('/stream/<job_id>')
 @login_required
 def stream(job_id):

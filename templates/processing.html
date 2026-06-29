@@ -44,10 +44,21 @@
   var errSection = document.getElementById('errorSection');
   var errText = document.getElementById('errorText');
 
-  var source = new EventSource('/stream/' + jobId);
+  var done = false;
 
-  source.onmessage = function(e) {
-    var data = JSON.parse(e.data);
+  function poll() {
+    if (done) return;
+    fetch('/status/' + jobId).then(function(r) { return r.json(); }).then(function(data) {
+      if (done) return;
+      handleData(data);
+      if (!done) setTimeout(poll, 3000);
+    }).catch(function() {
+      if (!done) setTimeout(poll, 5000);
+    });
+  }
+
+  function handleData(data) {
+    if (done) return;
 
     if (data.progress !== undefined) {
       bar.style.width = data.progress + '%';
@@ -58,7 +69,7 @@
     }
 
     if (data.status === 'complete') {
-      source.close();
+      done = true;
       bar.style.width = '100%';
       pct.textContent = '100%';
       text.style.display = 'none';
@@ -80,18 +91,21 @@
     }
 
     if (data.status === 'failed') {
-      source.close();
+      done = true;
       text.style.display = 'none';
       pct.style.display = 'none';
       errText.textContent = data.error || 'Something went wrong. Please try again.';
       errSection.style.display = 'block';
     }
-  };
+  }
 
-  source.onerror = function() {
-    source.close();
-    text.textContent = 'Connection lost. Check dashboard for results.';
-  };
+  if (typeof EventSource !== 'undefined') {
+    var source = new EventSource('/stream/' + jobId);
+    source.onmessage = function(e) { handleData(JSON.parse(e.data)); if (done) source.close(); };
+    source.onerror = function() { source.close(); poll(); };
+  } else {
+    poll();
+  }
 })();
 </script>
 {% endblock %}
