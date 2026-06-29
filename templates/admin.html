@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Admin — Depo Hindsight{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+  <div class="container">
+    <h1>Admin Panel</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <div style="display: flex; gap: 1.5rem; margin-bottom: 2rem;">
+      <div style="background: var(--navy-light); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.25rem 1.5rem; flex: 1; text-align: center;">
+        <div style="color: var(--gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Total users</div>
+        <div style="font-size: 1.75rem; font-weight: 700; color: var(--blue);">{{ users|length }}</div>
+      </div>
+      <div style="background: var(--navy-light); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.25rem 1.5rem; flex: 1; text-align: center;">
+        <div style="color: var(--gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Total jobs</div>
+        <div style="font-size: 1.75rem; font-weight: 700; color: var(--gold);">{{ jobs|length }}</div>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="upload-card">
+      <h2>Users</h2>
+      <table class="job-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Joined</th>
+            <th>Summary credits</th>
+            <th>Hindsight credits</th>
+            <th>Plan</th>
+            <th>Jobs</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td>{{ user.email }}{% if user.is_admin %} <span class="status-badge status-processing">admin</span>{% endif %}</td>
+            <td>{{ user.created_at.strftime('%b %d, %Y') }}</td>
+            <td>
+              <form method="POST" action="{{ url_for('admin_update_user', user_id=user.id) }}" style="display: inline-flex; align-items: center; gap: 0.25rem;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="action" value="set_credits">
+                <input type="number" name="summary_credits" value="{{ user.summary_credits }}" min="0" style="width: 60px; padding: 0.25rem 0.4rem; background: var(--navy); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--white); font-size: 0.85rem;">
+                <input type="hidden" name="hindsight_credits" value="{{ user.hindsight_credits }}">
+                <button type="submit" style="background: var(--blue); color: white; border: none; border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.75rem; cursor: pointer;">Set</button>
+              </form>
+            </td>
+            <td>
+              <form method="POST" action="{{ url_for('admin_update_user', user_id=user.id) }}" style="display: inline-flex; align-items: center; gap: 0.25rem;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="action" value="set_credits">
+                <input type="hidden" name="summary_credits" value="{{ user.summary_credits }}">
+                <input type="number" name="hindsight_credits" value="{{ user.hindsight_credits }}" min="0" style="width: 60px; padding: 0.25rem 0.4rem; background: var(--navy); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--white); font-size: 0.85rem;">
+                <button type="submit" style="background: var(--blue); color: white; border: none; border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.75rem; cursor: pointer;">Set</button>
+              </form>
+            </td>
+            <td>
+              <form method="POST" action="{{ url_for('admin_update_user', user_id=user.id) }}" style="display: inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="action" value="toggle_unlimited">
+                {% if user.unlimited %}
+                  <button type="submit" style="background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); border-radius: 4px; padding: 0.25rem 0.6rem; font-size: 0.75rem; font-weight: 600; cursor: pointer;">UNLIMITED</button>
+                {% else %}
+                  <button type="submit" style="background: rgba(255,255,255,0.05); color: var(--gray); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 0.25rem 0.6rem; font-size: 0.75rem; cursor: pointer;">Per-credit</button>
+                {% endif %}
+              </form>
+            </td>
+            <td>{{ user.jobs|length }}</td>
+            <td>
+              {% if not user.is_admin %}
+              <form method="POST" action="{{ url_for('admin_update_user', user_id=user.id) }}" style="display: inline;" onsubmit="return confirm('Delete {{ user.email }} and all their data?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="action" value="delete">
+                <button type="submit" style="background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.75rem; cursor: pointer;">Delete</button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- JOBS -->
+    <div class="upload-card" style="margin-top: 2rem;">
+      <h2>Recent jobs</h2>
+      {% if jobs %}
+      <table class="job-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>File</th>
+            <th>Deponent</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for job in jobs %}
+          <tr>
+            <td>{{ job.user.email }}</td>
+            <td>{{ job.filename }}</td>
+            <td>{{ job.deponent or '—' }}</td>
+            <td>{{ job.job_type }}</td>
+            <td>
+              {% if job.status == 'complete' %}
+                <span class="status-badge status-complete">Complete</span>
+              {% elif job.status == 'failed' %}
+                <span class="status-badge status-failed">Failed</span>
+              {% else %}
+                <span class="status-badge status-processing">{{ job.progress }}%</span>
+              {% endif %}
+            </td>
+            <td>{{ job.created_at.strftime('%b %d %H:%M') }}</td>
+            <td>
+              {% if job.status == 'complete' %}
+                {% for doc in job.documents %}
+                  <a href="{{ url_for('download', doc_id=doc.id) }}" class="download-link">{{ doc.doc_type }}</a>
+                {% endfor %}
+              {% endif %}
+              <form method="POST" action="{{ url_for('admin_delete_job', job_id=job.id) }}" style="display: inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button type="submit" style="background: rgba(239,68,68,0.15); color: var(--red); border: none; border-radius: 4px; padding: 0.2rem 0.4rem; font-size: 0.7rem; cursor: pointer; margin-left: 0.25rem;">X</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="no-jobs">No jobs yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -12,6 +12,21 @@
       {% endfor %}
     {% endwith %}
 
+    <div style="display: flex; gap: 1.5rem; margin-bottom: 2rem;">
+      <div style="background: var(--navy-light); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.25rem 1.5rem; flex: 1; text-align: center;">
+        <div style="color: var(--gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Summary credits</div>
+        <div style="font-size: 1.75rem; font-weight: 700; color: var(--blue);">
+          {% if current_user.unlimited or current_user.is_admin %}&infin;{% else %}{{ current_user.summary_credits }}{% endif %}
+        </div>
+      </div>
+      <div style="background: var(--navy-light); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.25rem 1.5rem; flex: 1; text-align: center;">
+        <div style="color: var(--gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Hindsight credits</div>
+        <div style="font-size: 1.75rem; font-weight: 700; color: var(--gold);">
+          {% if current_user.unlimited or current_user.is_admin %}&infin;{% else %}{{ current_user.hindsight_credits }}{% endif %}
+        </div>
+      </div>
+    </div>
+
     <div class="upload-card">
       <h2>New analysis</h2>
       <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">

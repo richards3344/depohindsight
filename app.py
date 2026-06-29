@@ -35,12 +35,22 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # ── Models ──
 
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', '').strip().lower()
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    summary_credits = db.Column(db.Integer, default=1)
+    hindsight_credits = db.Column(db.Integer, default=1)
+    unlimited = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     jobs = db.relationship('Job', backref='user', lazy=True)
+
+    @property
+    def is_admin(self):
+        return ADMIN_EMAIL and self.email == ADMIN_EMAIL
 
 
 class Job(db.Model):
@@ -92,9 +102,10 @@ def set_csrf_cookie(response):
 
 
 @app.context_processor
-def inject_csrf():
+def inject_globals():
     token = request.cookies.get('csrf_token', uuid.uuid4().hex)
-    return {'csrf_token': token}
+    is_admin = current_user.is_authenticated and current_user.is_admin
+    return {'csrf_token': token, 'is_admin': is_admin}
 
 
 # ── Routes ──
@@ -175,6 +186,21 @@ def upload():
 
     if job_type not in ('summary', 'hindsight', 'both'):
         job_type = 'both'
+
+    if not current_user.unlimited and not current_user.is_admin:
+        need_summary = job_type in ('summary', 'both')
+        need_hindsight = job_type in ('hindsight', 'both')
+        if need_summary and current_user.summary_credits < 1:
+            flash('No summary credits remaining. Contact us to purchase more.', 'error')
+            return redirect(url_for('dashboard'))
+        if need_hindsight and current_user.hindsight_credits < 1:
+            flash('No hindsight credits remaining. Contact us to purchase more.', 'error')
+            return redirect(url_for('dashboard'))
+        if need_summary:
+            current_user.summary_credits -= 1
+        if need_hindsight:
+            current_user.hindsight_credits -= 1
+        db.session.commit()
 
     transcript_text = file.read().decode('utf-8', errors='replace')
     original_name = file.filename
@@ -278,7 +304,7 @@ def download(doc_id):
         flash('Document not found.', 'error')
         return redirect(url_for('dashboard'))
     job = db.session.get(Job, doc.job_id)
-    if not job or job.user_id != current_user.id:
+    if not job or (job.user_id != current_user.id and not current_user.is_admin):
         flash('Unauthorized.', 'error')
         return redirect(url_for('dashboard'))
     return send_file(
@@ -287,6 +313,81 @@ def download(doc_id):
         download_name=doc.filename,
         mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     )
+
+
+# ── Admin ──
+
+def admin_required(f):
+    from functools import wraps
+    @wraps(f)
+    @login_required
+    def decorated(*args, **kwargs):
+        if not current_user.is_admin:
+            flash('Unauthorized.', 'error')
+            return redirect(url_for('dashboard'))
+        return f(*args, **kwargs)
+    return decorated
+
+
+@app.route('/admin')
+@admin_required
+def admin_panel():
+    users = User.query.order_by(User.created_at.desc()).all()
+    jobs = Job.query.order_by(Job.created_at.desc()).limit(100).all()
+    return render_template('admin.html', users=users, jobs=jobs)
+
+
+@app.route('/admin/user/<int:user_id>', methods=['POST'])
+@admin_required
+def admin_update_user(user_id):
+    user = db.session.get(User, user_id)
+    if not user:
+        flash('User not found.', 'error')
+        return redirect(url_for('admin_panel'))
+
+    action = request.form.get('action')
+
+    if action == 'set_credits':
+        summary_credits = request.form.get('summary_credits')
+        hindsight_credits = request.form.get('hindsight_credits')
+        if summary_credits is not None:
+            user.summary_credits = int(summary_credits)
+        if hindsight_credits is not None:
+            user.hindsight_credits = int(hindsight_credits)
+        db.session.commit()
+        flash(f'Credits updated for {user.email}.', 'success')
+
+    elif action == 'toggle_unlimited':
+        user.unlimited = not user.unlimited
+        db.session.commit()
+        status = 'unlimited' if user.unlimited else 'limited'
+        flash(f'{user.email} set to {status}.', 'success')
+
+    elif action == 'delete':
+        if user.email == ADMIN_EMAIL:
+            flash('Cannot delete admin account.', 'error')
+        else:
+            Document.query.filter(Document.job_id.in_(
+                db.session.query(Job.id).filter_by(user_id=user.id)
+            )).delete(synchronize_session=False)
+            Job.query.filter_by(user_id=user.id).delete()
+            db.session.delete(user)
+            db.session.commit()
+            flash(f'{user.email} deleted.', 'success')
+
+    return redirect(url_for('admin_panel'))
+
+
+@app.route('/admin/job/<job_id>/delete', methods=['POST'])
+@admin_required
+def admin_delete_job(job_id):
+    job = db.session.get(Job, job_id)
+    if job:
+        Document.query.filter_by(job_id=job.id).delete()
+        db.session.delete(job)
+        db.session.commit()
+        flash('Job deleted.', 'success')
+    return redirect(url_for('admin_panel'))
 
 
 # ── Background processing ──

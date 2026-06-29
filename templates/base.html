@@ -16,6 +16,7 @@
     <div class="nav-links" id="navLinks">
       {% if current_user.is_authenticated %}
         <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        {% if is_admin %}<a href="{{ url_for('admin_panel') }}">Admin</a>{% endif %}
         <a href="{{ url_for('logout') }}">Log out</a>
       {% else %}
         <a href="/#features">Features</a>
