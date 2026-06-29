@@ -32,8 +32,8 @@
       <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <div class="form-group">
-          <label for="transcript">Upload transcript (.txt file)</label>
-          <input type="file" id="transcript" name="transcript" accept=".txt" required>
+          <label for="transcript">Upload transcript (.txt or .pdf)</label>
+          <input type="file" id="transcript" name="transcript" accept=".txt,.pdf" required>
         </div>
         <div class="form-group">
           <label>Report type</label>

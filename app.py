@@ -180,8 +180,9 @@ def upload():
         flash('Please select a file.', 'error')
         return redirect(url_for('dashboard'))
 
-    if not file.filename.lower().endswith('.txt'):
-        flash('Only .txt files are supported.', 'error')
+    fname_lower = file.filename.lower()
+    if not fname_lower.endswith('.txt') and not fname_lower.endswith('.pdf'):
+        flash('Only .txt and .pdf files are supported.', 'error')
         return redirect(url_for('dashboard'))
 
     if job_type not in ('summary', 'hindsight', 'both'):
@@ -202,8 +203,20 @@ def upload():
             current_user.hindsight_credits -= 1
         db.session.commit()
 
-    transcript_text = file.read().decode('utf-8', errors='replace')
+    raw_bytes = file.read()
     original_name = file.filename
+
+    if fname_lower.endswith('.pdf'):
+        import fitz
+        try:
+            pdf = fitz.open(stream=raw_bytes, filetype="pdf")
+            transcript_text = "\n".join(page.get_text() for page in pdf)
+            pdf.close()
+        except Exception as e:
+            flash(f'Could not read PDF: {e}', 'error')
+            return redirect(url_for('dashboard'))
+    else:
+        transcript_text = raw_bytes.decode('utf-8', errors='replace')
 
     job = Job(
         user_id=current_user.id,
