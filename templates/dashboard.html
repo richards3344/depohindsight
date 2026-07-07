@@ -12,7 +12,11 @@
       {% endfor %}
     {% endwith %}
 
-    <div style="display: flex; gap: 1.5rem; margin-bottom: 2rem;">
+    {% if paid %}
+      <div class="flash-success">Payment received — credits added to your account.</div>
+    {% endif %}
+
+    <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem;">
       <div style="background: var(--navy-light); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.25rem 1.5rem; flex: 1; text-align: center;">
         <div style="color: var(--gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Summary credits</div>
         <div style="font-size: 1.75rem; font-weight: 700; color: var(--blue);">
@@ -26,6 +30,23 @@
         </div>
       </div>
     </div>
+
+    {% if not current_user.unlimited and not current_user.is_admin %}
+    <div style="background: var(--navy-light); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+      <div style="color: var(--gray); font-size: 0.85rem; margin-bottom: 1rem;">Buy more credits</div>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="{{ url_for('buy', product='summary') }}" class="btn" style="flex: 1; text-align: center; min-width: 140px; padding: 0.7rem 1rem; font-size: 0.85rem;">
+          Summary — $39
+        </a>
+        <a href="{{ url_for('buy', product='hindsight') }}" class="btn" style="flex: 1; text-align: center; min-width: 140px; padding: 0.7rem 1rem; font-size: 0.85rem; background: var(--gold); color: #000;">
+          Hindsight — $49
+        </a>
+        <a href="{{ url_for('buy', product='both') }}" class="btn" style="flex: 1; text-align: center; min-width: 140px; padding: 0.7rem 1rem; font-size: 0.85rem; background: var(--green); color: #000;">
+          Both — $75 <span style="font-size: 0.7rem; opacity: 0.8;">(save $13)</span>
+        </a>
+      </div>
+    </div>
+    {% endif %}
 
     <div class="upload-card">
       <h2>New analysis</h2>

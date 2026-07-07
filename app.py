@@ -4,10 +4,11 @@ import io
 import threading
 import time
 import json
+import stripe
 from datetime import datetime
 from flask import (
     Flask, render_template, request, redirect, url_for,
-    flash, send_file, Response, stream_with_context
+    flash, send_file, Response, stream_with_context, jsonify
 )
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -28,6 +29,14 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
+stripe.api_key = os.environ.get('STRIPE_SECRET_KEY', '')
+STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET', '')
+STRIPE_PRICES = {
+    'summary':   {'amount': 3900, 'label': '1 Summary Credit',          'summary': 1, 'hindsight': 0},
+    'hindsight':  {'amount': 4900, 'label': '1 Hindsight Credit',        'summary': 0, 'hindsight': 1},
+    'both':       {'amount': 7500, 'label': 'Summary + Hindsight Bundle', 'summary': 1, 'hindsight': 1},
+}
 
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'uploads')
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -87,6 +96,8 @@ def load_user(user_id):
 @app.before_request
 def csrf_protect():
     if request.method == 'POST':
+        if request.path == '/stripe/webhook':
+            return
         token = request.form.get('csrf_token')
         if not token or token != request.cookies.get('csrf_token'):
             flash('Session expired. Please try again.', 'error')
@@ -172,7 +183,8 @@ def logout():
 @login_required
 def dashboard():
     jobs = Job.query.filter_by(user_id=current_user.id).order_by(Job.created_at.desc()).all()
-    return render_template('dashboard.html', jobs=jobs)
+    paid = request.args.get('paid') == '1'
+    return render_template('dashboard.html', jobs=jobs, paid=paid)
 
 
 @app.route('/upload', methods=['POST'])
@@ -331,6 +343,67 @@ def download(doc_id):
         download_name=doc.filename,
         mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     )
+
+
+# ── Stripe ──
+
+@app.route('/buy/<product>')
+@login_required
+def buy(product):
+    if product not in STRIPE_PRICES:
+        flash('Invalid product.', 'error')
+        return redirect(url_for('dashboard'))
+    if not stripe.api_key:
+        flash('Payments are not configured yet.', 'error')
+        return redirect(url_for('dashboard'))
+
+    price = STRIPE_PRICES[product]
+    session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=[{
+            'price_data': {
+                'currency': 'usd',
+                'unit_amount': price['amount'],
+                'product_data': {'name': price['label']},
+            },
+            'quantity': 1,
+        }],
+        mode='payment',
+        success_url=request.host_url.rstrip('/') + url_for('dashboard') + '?paid=1',
+        cancel_url=request.host_url.rstrip('/') + url_for('dashboard'),
+        client_reference_id=str(current_user.id),
+        metadata={'product': product},
+    )
+    return redirect(session.url, code=303)
+
+
+@app.route('/stripe/webhook', methods=['POST'])
+def stripe_webhook():
+    payload = request.get_data()
+    sig = request.headers.get('Stripe-Signature')
+
+    if STRIPE_WEBHOOK_SECRET:
+        try:
+            event = stripe.Webhook.construct_event(payload, sig, STRIPE_WEBHOOK_SECRET)
+        except (ValueError, stripe.error.SignatureVerificationError):
+            return 'Invalid signature', 400
+    else:
+        event = json.loads(payload)
+
+    if event.get('type') == 'checkout.session.completed':
+        session_data = event['data']['object']
+        user_id = session_data.get('client_reference_id')
+        product = session_data.get('metadata', {}).get('product')
+
+        if user_id and product and product in STRIPE_PRICES:
+            user = db.session.get(User, int(user_id))
+            if user:
+                credits = STRIPE_PRICES[product]
+                user.summary_credits += credits['summary']
+                user.hindsight_credits += credits['hindsight']
+                db.session.commit()
+
+    return 'OK', 200
 
 
 # ── Admin ──

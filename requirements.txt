@@ -7,3 +7,4 @@ anthropic==0.52.0
 python-docx==1.1.2
 psycopg2-binary==2.9.10
 PyMuPDF==1.25.5
+stripe==12.1.0
