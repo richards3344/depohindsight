@@ -54,12 +54,13 @@ def extract_json_from_response(content, log_func):
             max_tokens=16000,
             temperature=0,
             messages=[
-                {"role": "user", "content": f"The following JSON is malformed. Fix it so it parses correctly. Return ONLY the fixed JSON, nothing else. No code fences, no explanation. Common issues: unescaped quotes inside strings, missing commas, trailing commas, control characters.\n\n{repair_content}"},
-                {"role": "assistant", "content": "{"},
+                {"role": "user", "content": f"The following JSON is malformed. Fix it so it parses correctly. Return ONLY the fixed JSON, nothing else. No code fences, no explanation. Start your response with the opening curly brace. Common issues: unescaped quotes inside strings, missing commas, trailing commas, control characters.\n\n{repair_content}"},
             ]
         )
 
-        repaired = "{" + repair_response.content[0].text
+        repaired = repair_response.content[0].text.strip()
+        if repaired.startswith("```"):
+            repaired = repaired.split("\n", 1)[1].rsplit("```", 1)[0].strip()
         last_brace = repaired.rfind('}')
         if last_brace > 0:
             repaired = repaired[:last_brace + 1]
@@ -278,7 +279,9 @@ TARGET COUNTS:
 - 8-12 cross-examination ammunition items
 
 TRANSCRIPT:
-{transcript}"""
+{transcript}
+
+IMPORTANT: Respond with ONLY the JSON object. No introduction, no explanation, no code fences, no text before or after the JSON. Your entire response must be a single valid JSON object starting with {{ and ending with }}."""
 
 
 def generate_critique_claude(transcript, deponent, log_func, progress_func=None):
